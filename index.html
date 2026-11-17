@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ФОРМА — тренировочный дневник</title>
+<style>
+:root{--bg:#F3F5F9;--card:#fff;--line:#E2E8F0;--text:#0F172A;--muted:#64748B;--sub:#EAEEF5;--ac:#10B981;--acd:#059669;--acs:#D1FAE5;--act:#ECFDF5;--aci:#065F46;--or:#D97706;--ors:#FEF3C7;--red:#DC2626;--reds:#FEE2E2;--side:#0F172A}
+@media(prefers-color-scheme:dark){:root{--bg:#0B1220;--card:#162033;--line:#26344D;--text:#F1F5F9;--muted:#94A3B8;--sub:#223049;--acs:#064E3B;--act:#0F2A24;--aci:#6EE7B7;--ors:#3B2F0B;--or:#FBBF24;--reds:#3B1515;--red:#F87171;--side:#070C17}}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.45 "Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden}
+aside{width:232px;background:var(--side);padding:26px 16px 18px;display:flex;flex-direction:column;flex-shrink:0}
+.brand{color:#34D399;font-size:26px;font-weight:800;margin-left:12px}
+.tag{color:#64748B;font-size:12px;margin:2px 0 24px 12px}
+.nav{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:#94A3B8;font:600 15px inherit;font-family:inherit;padding:12px 14px;border-radius:10px;cursor:pointer;margin:3px 0;text-align:left}
+.nav:hover{background:#1E293B;color:#fff}.nav.on{background:#064E3B;color:#6EE7B7}
+.side-foot{margin:auto 0 0 12px;color:#94A3B8;font-size:12px}
+.side-foot small{display:block;color:#475569;margin-top:4px}
+main{flex:1;overflow:auto;position:relative}
+.page{padding:30px 36px 40px;max-width:1180px}
+h1{font-size:30px;margin:0 0 4px}h2{font-size:17px;margin:0 0 10px}
+.muted{color:var(--muted)}.sm{font-size:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.btn{border:0;border-radius:10px;padding:12px 22px;font:600 14px inherit;font-family:inherit;cursor:pointer;background:var(--acd);color:#fff}
+.btn:hover{opacity:.88}.btn:disabled{opacity:.4;cursor:default}
+.btn.sub{background:var(--sub);color:var(--text)}.btn.dan{background:var(--reds);color:var(--red)}
+.btn.light{background:#fff;color:var(--aci);font-size:15px;padding:14px 26px}
+.btn.sq{width:42px;height:42px;padding:0;font-size:18px;flex-shrink:0}
+.btn.ok.on{background:var(--acd);color:#fff}
+.hero{background:linear-gradient(135deg,#047857,#10B981);border-radius:18px;padding:28px 30px;margin:20px 0 18px;display:flex;gap:24px;align-items:center;justify-content:space-between;color:#fff;flex-wrap:wrap}
+.hero .k{color:#A7F3D0;font-size:12px;font-weight:700}.hero h2{font-size:28px;margin:4px 0 6px}.hero p{margin:0;color:#D1FAE5}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat{padding:18px}.stat .t{font-size:12px;color:var(--muted);font-weight:600}.stat .v{font-size:28px;font-weight:700;color:var(--acd);margin:6px 0 2px}
+.two{display:grid;grid-template-columns:3fr 2fr;gap:14px;margin-top:14px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:12px}
+.day{border:1.5px solid var(--line);border-radius:12px;text-align:center;padding:10px 0 12px}.day.today{border-color:var(--ac)}
+.day b{font-size:12px;color:var(--muted)}.day.today b{color:var(--acd)}
+.dot{width:38px;height:38px;border-radius:50%;margin:8px auto 0;display:flex;align-items:center;justify-content:center;font-weight:700;background:var(--sub);color:var(--muted)}
+.dot.t{background:var(--acs);color:var(--aci)}.dot.d{background:var(--acd);color:#fff}
+.tips{margin:0;padding-left:18px;color:var(--muted)}.tips li{margin:5px 0}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0 12px}
+.plan{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:20px;cursor:pointer}
+.plan.sel{border-color:var(--ac);background:var(--act)}
+.plan h3{margin:0 0 2px;font-size:20px;display:flex;justify-content:space-between;align-items:center}
+.plan ol{margin:10px 0 0;padding-left:20px;font-size:13px}
+.badge{display:inline-block;background:var(--acs);color:var(--aci);border-radius:8px;padding:3px 10px;font-size:12px;font-weight:600;margin:0 6px 6px 0}
+.badge.o{background:var(--ors);color:var(--or)}.badge.g{background:var(--sub);color:var(--text)}
+.inp{background:var(--bg);color:var(--text);border:1.5px solid var(--line);border-radius:9px;padding:9px 11px;font:inherit;width:100%}
+.inp:focus{outline:0;border-color:var(--ac)}
+.inp.big{font-size:18px;font-weight:600;text-align:center}
+label.f{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.wh{padding:26px 36px 4px}.wb{padding:12px 36px 24px}
+.wf{position:sticky;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:14px 36px;display:flex;justify-content:space-between}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.stepper{display:flex;align-items:center;margin-top:14px;flex-wrap:wrap;row-gap:6px}
+.st{width:34px;height:34px;border-radius:50%;background:var(--sub);color:var(--muted);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:0;font-family:inherit}
+.st.p{background:var(--acs);color:var(--aci)}.st.c{background:var(--acd);color:#fff}
+.ln{width:14px;height:2px;background:var(--line)}.ln.p{background:var(--acs)}
+.exg{display:grid;grid-template-columns:1fr 390px;gap:16px}
+.step{display:flex;gap:12px;margin-top:10px}.step i{flex:0 0 26px;height:26px;border-radius:50%;background:var(--acs);color:var(--aci);font:700 12px/26px sans-serif;text-align:center}
+.mini{background:var(--ors);border-radius:10px;padding:12px 16px;margin-top:18px}.mini b{font-size:11px;color:var(--or)}
+.srow{display:flex;gap:6px;align-items:center;margin-bottom:10px}.sl{width:46px;color:var(--muted);font-weight:600;font-size:13px}
+.rest{font-size:30px;font-weight:700;color:var(--acd);margin:10px 0 8px}
+.bar{height:8px;background:var(--sub);border-radius:4px;overflow:hidden;margin-bottom:14px}.bar i{display:block;height:100%;background:var(--ac);width:0;transition:width 1s linear}
+.chip{border:1.5px solid transparent;background:var(--sub);color:var(--muted);border-radius:10px;padding:9px 16px;font:600 14px inherit;font-family:inherit;cursor:pointer;margin:0 8px 8px 0}
+.chip:hover{border-color:var(--acs)}.chip.on{background:var(--acs);border-color:var(--ac);color:var(--aci)}
+.cb{display:flex;gap:12px;align-items:center;font-weight:700;font-size:17px;cursor:pointer}.cb input{width:20px;height:20px;accent-color:var(--acd)}
+.hist{display:grid;grid-template-columns:360px 1fr;gap:16px}
+.item{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.item:hover{border-color:var(--acs)}.item.sel{border-color:var(--ac);background:var(--act)}
+.item .ty{color:var(--acd);font-weight:700;white-space:nowrap}
+.xr{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding:10px 0}.xr b.a{color:var(--acd)}
+.err{color:var(--red);font-size:12px;margin-top:8px;min-height:16px}
+.empty{color:var(--muted);text-align:center;padding:60px 10px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--side);color:#fff;padding:12px 22px;border-radius:12px;font-weight:600;z-index:9;display:none;box-shadow:0 6px 20px #0004}
+svg.ch{width:100%;height:auto;display:block}
+@media(max-width:900px){body{flex-direction:column-reverse}aside{width:100%;flex-direction:row;padding:6px;justify-content:space-around}.brand,.tag,.side-foot{display:none}.nav{flex-direction:column;gap:0;font-size:11px;padding:6px 10px;width:auto}
+.page,.wh,.wb{padding-left:16px;padding-right:16px}.wf{padding:12px 16px}.stats{grid-template-columns:1fr 1fr}.two,.exg,.hist,.plans{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="brand">ФОРМА</div><div class="tag">домашний дневник тренировок</div>
+  <button class="nav" data-act="nav" data-v="home"><span>🏠</span>Обзор</button>
+  <button class="nav" data-act="nav" data-v="train"><span>💪</span>Тренировка</button>
+  <button class="nav" data-act="nav" data-v="history"><span>📋</span>История</button>
+  <button class="nav" data-act="nav" data-v="food"><span>🥗</span>Питание</button>
+  <button class="nav" data-act="nav" data-v="body"><span>⚖</span>Замеры</button>
+  <div class="side-foot"><span id="sideStat"></span><small>Данные хранятся в этом браузере. Делай резервную копию в «Истории».</small></div>
+</aside>
+<main id="main"></main>
+<div class="toast" id="toast"></div>
+<input type="file" id="importFile" accept=".json,application/json" hidden>
+
+<script>
+"use strict";
+/* ===================== Данные упражнений ===================== */
+const WARMUP=[
+ {t:"Суставная разминка",d:"≈ 2 мин",s:["Шея: медленные наклоны и повороты — 30 сек","Плечи: круговые движения вперёд и назад — 30 сек","Локти и кисти: вращения — 20 сек","Таз: круговые движения — 30 сек","Колени и стопы: вращения в обе стороны — 20 сек"]},
+ {t:"Кардио-разогрев",d:"≈ 2 мин",s:["Ходьба на месте с активными махами руками","Дыхание ровное, темп средний","Заверши, когда станет тепло по всему телу"]},
+ {t:"Динамическая растяжка",d:"≈ 2 мин",s:["Махи ногами вперёд-назад — по 10 на каждую","Круги руками с наклоном корпуса","Приседания без веса — 8–10 раз","Наклоны корпуса в стороны — по 8 раз"]}
+];
+const PLANS={
+"Тренировка A":[
+ {name:"Приседания с паузой",plan:"3 × 10–15",hint:"3 секунды вниз, пауза 1 секунду внизу",warm:"8 обычных приседаний без веса",steps:["Стопы на ширине плеч, носки чуть развёрнуты наружу","Медленно опускайся 3 секунды, отводя таз назад","Внизу — пауза 1 секунда, колени по линии носков","Поднимайся, толкаясь всей стопой, выдох на подъёме"]},
+ {name:"Отжимания",plan:"3 × 6–12",hint:"Стена → высокая опора → с колен → классические",warm:"5–8 отжиманий от стены или высокой опоры",steps:["Упор лёжа (или с колен/от опоры), кисти чуть шире плеч","Корпус — прямая линия от макушки до пяток, пресс напряжён","Сгибай локти, опускаясь до угла ~90°, локти идут назад","Мощно оттолкнись, выдох на подъёме, корпус не провисает"]},
+ {name:"Выпады назад",plan:"3 × 8–12 на ногу",hint:"Корпус устойчиво, колено по линии носка",warm:"5 выпадов назад без веса на каждую ногу",steps:["Стой прямо, руки на поясе или перед собой","Шагни назад одной ногой, опуская оба колена до ~90°","Переднее колено — над стопой, не заваливай внутрь","Толкнись передней стопой и вернись в стойку"]},
+ {name:"Тяга полотенца сидя",plan:"3 × 10–15",hint:"Самосопротивление: тянешь руками — ноги сопротивляются",warm:"10 медленных тяг с лёгким сопротивлением",steps:["Сядь на пол, ноги вытяни, полотенце вокруг стоп","Возьми концы полотенца, локти прижаты к корпусу","Тяни локти назад, ноги слегка сопротивляются","Медленно верни руки вперёд — не бросай"]},
+ {name:"Ягодичный мостик",plan:"3 × 12–20",hint:"Пауза 2 секунды в верхней точке",warm:"10 медленных мостиков",steps:["Ляг на спину, стопы на полу у таза, колени согнуты","Подними таз вверх, толкаясь пятками","В верхней точке — пауза 2 секунды, ягодицы напряжены","Медленно опустись, не касаясь пола между повторами"]},
+ {name:"Dead Bug",plan:"3 × 8–12 на сторону",hint:"Поясница остаётся прижатой к полу",warm:"5 повторов в медленном темпе",steps:["Ляг на спину, руки вверх, колени над тазом — 90°","Поясницу прижми к полу и держи прижатой","Медленно вытяни противоположные руку и ногу","Верни в исходное, повтори на другую сторону"]},
+ {name:"Подъёмы на носки",plan:"2 × 15–25",hint:"Поднимайся полностью, опускайся медленно",warm:"10 медленных подъёмов без опоры",steps:["Стой прямо, стопы на ширине таза, можно придерживаться за стену","Поднимись на носки как можно выше","Задержись на 1 секунду в верхней точке","Медленно опустись (3 секунды), пятки почти касаются пола"]}],
+"Тренировка B":[
+ {name:"Болгарские выпады или выпады назад",plan:"3 × 8–10 на ногу",hint:"Только устойчивая опора; если неудобно — обычные выпады",warm:"5 выпадов назад на каждую ногу",steps:["Стой спиной к устойчивой опоре (невысокой)","Поставь одну стопу назад на опору (или просто шагни назад)","Опускайся, пока переднее бедро не станет параллельно полу","Толкнись передней пяткой и вернись в исходное"]},
+ {name:"Отжимания узким хватом",plan:"3 × 6–10",hint:"Локти назад, при трудности — высокая опора",warm:"5 отжиманий с широкой постановкой рук",steps:["Упор лёжа, кисти под плечами (уже плеч)","Корпус — прямая линия, пресс напряжён","Опускайся, локти идут назад вдоль корпуса","Отталкивайся мощно, выдох на подъёме"]},
+ {name:"Наклоны Good Morning",plan:"3 × 12–15",hint:"Таз назад, спина нейтральная, колени слегка согнуты",warm:"10 медленных наклонов с руками на поясе",steps:["Стой прямо, стопы на ширине плеч, руки за голову или на пояс","Отводи таз назад, наклоняйся вперёд с нейтральной спиной","Колени слегка согнуты, не блокируй их","Почувствуй растяжение задней поверхности бедра — вернись"]},
+ {name:"Обратный снежный ангел",plan:"3 × 10–15",hint:"Лёжа на животе, двигай руками медленно",warm:"8 медленных повторов",steps:["Ляг на живот, лоб на полу, руки вдоль тела ладонями вверх","Медленно веди руки вверх и в стороны, лопатки своди","Не задирай голову — смотри в пол","Медленно верни руки в исходное"]},
+ {name:"Ягодичный мостик на одной ноге",plan:"2 × 8–12 на ногу",hint:"Если сложно — обычный мостик на двух",warm:"10 обычных мостиков на двух ногах",steps:["Ляг на спину, одна стопа на полу, вторая нога поднята","Подними таз, толкаясь пяткой опорной стопы","В верхней точке — пауза 1–2 секунды","Медленно опустись, повтори на другую ногу"]},
+ {name:"Bird Dog",plan:"3 × 8–12 на сторону",hint:"Не разворачивай таз, задержка 1–2 секунды",warm:"5 медленных повторов на каждую сторону",steps:["Встань на четвереньки: кисти под плечами, колени под тазом","Вытяни противоположные руку и ногу вперёд/назад","Задержись 1–2 секунды, таз не разворачивай","Верни в исходное, повтори на другую сторону"]},
+ {name:"Боковая планка",plan:"2 × 20–40 сек. на сторону",hint:"При необходимости — с колен",warm:"10 секунд на каждой стороне с колен",steps:["Ляг на бок, локоть под плечом, стопы одна на другой","Подними таз, корпус — прямая линия от плеч до стоп","Дыши ровно, не провисай в тазу","Опустись и повтори на другую сторону"]}]
+};
+const WEEK=["T","W","T","R","T","W","R"], DN=["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
+const FEEL=["Легко","Нормально","Тяжело","Плохо себя чувствовал"];
+
+/* ===================== Помощники ===================== */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const okD=s=>/^\d{4}-\d{2}-\d{2}$/.test(s||"");
+const pd=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const fd=(s,o)=>okD(s)?pd(s).toLocaleDateString("ru-RU",o):(s||"");
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const num=v=>(Math.round(v*100)/100).toString().replace(".",",");
+const nSets=p=>parseInt(p.split("×")[0])||3;
+const firstReps=p=>{const m=p.match(/×\s*\D*(\d+)/);return m?+m[1]:10};
+const pn=(v,l)=>{v=String(v).trim().replace(",",".");if(!v)return null;const x=Number(v);if(!(x>0&&x<=500))throw new Error(`Проверь поле «${l}»: введи положительное число.`);return x};
+function toast(t){const e=$("#toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2600)}
+
+let D;try{D=JSON.parse(localStorage.getItem("forma_data"))}catch(e){}
+if(!D||!Array.isArray(D.sessions))D={sessions:[],measurements:[],nutrition:[]};
+D.measurements=Array.isArray(D.measurements)?D.measurements:[];
+D.nutrition=Array.isArray(D.nutrition)?D.nutrition:[];
+const save=()=>{try{localStorage.setItem("forma_data",JSON.stringify(D));return true}catch(e){toast("Не удалось сохранить: "+e.message);return false}};
+const sessDesc=()=>D.sessions.map((s,i)=>[s,i]).sort((a,b)=>String(b[0].date).localeCompare(String(a[0].date))||b[1]-a[1]).map(x=>x[0]);
+const nextPlan=()=>{const l=sessDesc()[0];return l&&l.type==="Тренировка A"?"Тренировка B":"Тренировка A"};
+function lastSets(name){for(const s of sessDesc()){const e=(s.exercises||[]).find(x=>x.name===name&&x.sets&&x.sets.length);if(e)return e.sets}return null}
+function series(w){const r=[],add=(d,v)=>{if(v>0&&okD(d))r.push({d:pd(d),v})};
+ D.measurements.forEach(m=>add(m.date,w?m.weight:m.waist));D.sessions.forEach(s=>add(s.date,w?s.weight:s.waist));
+ return r.sort((a,b)=>a.d-b.d)}
+function delta(s,u){if(s.length<2)return s.length?"первый замер":"нет данных";const x=s[s.length-1].v-s[s.length-2].v;return Math.abs(x)<.005?"без изменений":`${x>0?"+":"−"}${num(Math.abs(x))} ${u} с прошлого замера`}
+
+/* ===================== Состояние ===================== */
+let view="home",wz=null,setup={plan:nextPlan(),date:iso(new Date())},selS=null,metric="weight";
+let editS=null; // черновик редактирования тренировки
+let foodDate=iso(new Date());
+const MEALS=["Завтрак","Обед","Ужин","Перекус"];
+const rest={left:0,total:0,state:0,t:null};
+
+function render(){
+ $$(".nav").forEach(b=>b.classList.toggle("on",b.dataset.v===view));
+ $("#sideStat").textContent="Тренировок записано: "+D.sessions.length;
+ const m=$("#main");
+ m.innerHTML=view==="home"?vHome():view==="train"?(wz?vWiz():vSetup()):view==="history"?vHist():view==="food"?vFood():vBody();
+ if(view==="train"&&wz&&wz.stage>0&&wz.stage<wz.ex.length+1)paintRest();
+ if(!(view==="train"&&wz))m.scrollTop=0;
+}
+
+/* ===================== ОБЗОР ===================== */
+function vHome(){
+ const t=new Date(),tk=iso(t),dow=(t.getDay()+6)%7,kind=WEEK[dow],nx=nextPlan(),done=D.sessions.some(s=>s.date===tk);
+ let title,sub,btn;
+ if(wz){title="Тренировка идёт";sub=`${wz.plan} — продолжай с того места, где остановился.`;btn="▶ Продолжить"}
+ else if(done){title="Сегодня всё сделано ✓";sub="Отличная работа. Отдыхай и восстанавливайся — прогресс делается в паузах.";btn="Записать ещё одну"}
+ else if(kind==="T"){title="Сегодня — "+nx;sub=`${PLANS[nx].length} упражнений, разминка около 6 минут. Следующая по очереди.`;btn="▶ Начать тренировку"}
+ else{title=kind==="W"?"Сегодня — ходьба и восстановление":"Сегодня — день отдыха";sub="Силовая тренировка сегодня не запланирована. Но если хочется — можно начать.";btn="Потренироваться всё равно"}
+ const mon=new Date(t.getFullYear(),t.getMonth(),t.getDate()-dow),sunK=iso(new Date(mon.getFullYear(),mon.getMonth(),mon.getDate()+6)),monK=iso(mon);
+ const wk=D.sessions.filter(s=>s.date>=monK&&s.date<=sunK).length,w=series(true),c=series(false),l=sessDesc()[0];
+ const st=(i,t,v,s)=>`<div class="card stat"><div class="t">${i} ${t}</div><div class="v">${v}</div><div class="muted sm">${s}</div></div>`;
+ let wkh="";for(let i=0;i<7;i++){const d=new Date(mon.getFullYear(),mon.getMonth(),mon.getDate()+i),k=iso(d),did=D.sessions.some(s=>s.date===k),kk=WEEK[i];
+  wkh+=`<div class="day${k===tk?" today":""}"><b>${DN[i]}</b><div class="dot ${did?"d":kk==="T"?"t":""}">${did?"✓":kk==="T"?"●":kk==="W"?"🚶":"–"}</div></div>`}
+ return `<div class="page"><div class="muted" style="font-weight:600;font-size:13px">${esc(cap(t.toLocaleDateString("ru-RU",{weekday:"long",day:"numeric",month:"long"})).toUpperCase())}</div><h1>Обзор</h1>
+ <div class="hero"><div><div class="k">СЕГОДНЯ</div><h2>${esc(title)}</h2><p>${esc(sub)}</p></div><button class="btn light" data-act="hero">${btn}</button></div>
+ <div class="stats">${st("🏋","Тренировок всего",D.sessions.length,l?"последняя: "+fd(l.date,{day:"numeric",month:"long"}):"пока нет записей")}${st("📅","На этой неделе",wk+" из 3","по плану")}${st("⚖","Последний вес",w.length?num(w.at(-1).v)+" кг":"—",delta(w,"кг"))}${st("📏","Последняя талия",c.length?num(c.at(-1).v)+" см":"—",delta(c,"см"))}</div>
+ <div class="two"><div class="card"><h2>Эта неделя</h2><div class="muted sm">Пн / Ср / Пт — силовые, Вт / Сб — ходьба, Чт и Вс — отдых</div><div class="week">${wkh}</div></div>
+ <div class="card"><h2>Правила прогресса</h2><ul class="tips"><li>Оставляй 1–3 повтора в запасе</li><li>Отдых между подходами 90–120 сек</li><li>Достиг верхней границы повторов — усложни вариант</li><li>Между силовыми днями — минимум сутки отдыха</li><li>Каждые 2 недели — замер талии и среднего веса</li><li>Тяга полотенца — не замена турнику; добавь резиновую ленту или турник</li><li>Боль, головокружение — прекрати тренировку</li></ul></div></div></div>`}
+
+/* ===================== ТРЕНИРОВКА: выбор ===================== */
+function vSetup(){
+ const rec=nextPlan();
+ const cards=Object.entries(PLANS).map(([n,ex])=>`<div class="plan${n===setup.plan?" sel":""}" data-act="plan" data-p="${esc(n)}"><h3>${esc(n)}${n===rec?'<span class="badge" style="margin:0">Рекомендуем</span>':""}</h3><div class="muted sm">${ex.length} упражнений</div><ol>${ex.map(e=>`<li>${esc(e.name)}</li>`).join("")}</ol></div>`).join("");
+ return `<div class="page"><h1>Новая тренировка</h1><div class="muted">Выбери план — упражнения и подсказки откроются по шагам.</div><div class="plans">${cards}</div>
+ <div class="card row"><div><label class="f">Дата тренировки</label><input class="inp" type="date" id="setupDate" value="${setup.date}" style="width:170px"></div>
+ <button class="btn" data-act="start">▶ Начать с разминкой</button><button class="btn sub" data-act="startnw">Пропустить разминку</button></div></div>`}
+
+/* ===================== ТРЕНИРОВКА: мастер ===================== */
+function startWz(warm){
+ const ex=PLANS[setup.plan];
+ wz={plan:setup.plan,ex,date:okD(setup.date)?setup.date:iso(new Date()),stage:warm?0:1,warm:WARMUP.map(()=>false),
+  sets:ex.map(e=>Array(nSets(e.plan)).fill("")),done:ex.map(e=>Array(nSets(e.plan)).fill(false)),feel:"Нормально",weight:"",waist:"",notes:"",rest:90};
+ stopRest();render()}
+const stageName=i=>i===0?"Разминка":i===wz.ex.length+1?"Итог":wz.ex[i-1].name;
+function vWiz(){
+ const tot=wz.ex.length+2;let sp="";
+ for(let i=0;i<tot;i++){const c=i===wz.stage?"c":i<wz.stage?"p":"";
+  sp+=`<button class="st ${c}" data-act="stage" data-s="${i}" title="${esc(stageName(i))}">${i<wz.stage?"✓":i===0?"Р":i===tot-1?"★":i}</button>`;
+  if(i<tot-1)sp+=`<span class="ln ${i<wz.stage?"p":""}"></span>`}
+ const last=wz.stage===tot-1,body=wz.stage===0?bWarm():last?bSum():bEx(wz.stage-1);
+ const next=last?`<button class="btn" data-act="finish">💾 Сохранить тренировку</button>`:`<button class="btn" data-act="next">${wz.stage===0?"К упражнениям":wz.stage===tot-2?"К итогу":"Далее"} →</button>`;
+ return `<div><div class="wh"><div class="top"><div><h1>${esc(wz.plan)}</h1><div class="muted sm">${esc(cap(fd(wz.date,{weekday:"long",day:"numeric",month:"long",year:"numeric"})))} · ${esc(stageName(wz.stage))}</div></div><button class="btn sub" data-act="abort">✕ Прервать</button></div><div class="stepper">${sp}</div></div>
+ <div class="wb">${body}</div><div class="wf"><div>${wz.stage>0?'<button class="btn sub" data-act="prev">← Назад</button>':""}</div>${next}</div></div>`}
+
+function bWarm(){return `<p class="muted">5–7 минут разогрева снижают риск травм. Отмечай блоки по мере выполнения.</p>`+WARMUP.map((b,i)=>
+ `<div class="card" style="margin-bottom:10px"><div class="top"><label class="cb"><input type="checkbox" data-warm="${i}" ${wz.warm[i]?"checked":""}>${esc(b.t)}</label><span class="badge o">${b.d}</span></div>${b.s.map(s=>`<div class="muted" style="margin:6px 0 0 32px">• ${esc(s)}</div>`).join("")}</div>`).join("")}
+
+function bEx(i){
+ const e=wz.ex[i],prev=lastSets(e.name),lo=firstReps(e.plan);
+ const rows=wz.sets[i].map((v,k)=>`<div class="srow"><span class="sl">№ ${k+1}</span><button class="btn sub sq" data-act="minus" data-k="${k}">−</button><input class="inp big" data-set="${k}" inputmode="numeric" value="${esc(v)}" placeholder="${esc(prev&&prev[k]!=null?prev[k]:lo)}"><button class="btn sub sq" data-act="plus" data-k="${k}">+</button><button class="btn sub sq ok${wz.done[i][k]?" on":""}" data-act="ok" data-k="${k}" title="Подход выполнен">✓</button></div>`).join("");
+ return `<div class="exg"><div class="card"><div class="sm" style="color:var(--acd);font-weight:700">УПРАЖНЕНИЕ ${i+1} ИЗ ${wz.ex.length}</div><h1 style="font-size:26px;margin:4px 0 8px">${esc(e.name)}</h1><span class="badge o">${esc(e.plan)}</span><div class="muted" style="margin:4px 0 18px">${esc(e.hint)}</div>
+ <h2>Как выполнять</h2>${e.steps.map((s,n)=>`<div class="step"><i>${n+1}</i><div>${esc(s)}</div></div>`).join("")}<div class="mini"><b>МИНИ-РАЗМИНКА ПЕРЕД УПРАЖНЕНИЕМ</b><div>${esc(e.warm)}</div></div></div>
+ <div><div class="card"><h2>Подходы</h2><div class="muted sm" style="margin-bottom:14px">${prev?"В прошлый раз: "+esc(prev.join(" / ")):"Нажми ✓ после подхода — запустится отдых."}</div>${rows}</div>
+ <div class="card" style="margin-top:12px"><h2>Отдых между подходами</h2><div class="rest" id="restText">Готов к работе</div><div class="bar"><i id="restBar"></i></div>
+ <div>${[60,90,120].map(s=>`<button class="chip${wz.rest===s?" on":""}" data-act="rest" data-sec="${s}">${s} с</button>`).join("")}</div>
+ <button class="btn" data-act="restgo">▶ Старт</button> <button class="btn sub" data-act="restreset">Сброс</button></div></div></div>`}
+
+function bSum(){
+ const res=wz.ex.map((e,i)=>{const f=wz.sets[i].filter(Boolean);return `<div class="xr" style="border-top:0;padding:8px 0"><div><b>${i+1}. ${esc(e.name)}</b><div class="muted sm">план: ${esc(e.plan)}</div></div><b class="${f.length?"a":"muted"}">${f.length?esc(f.join(" / ")):"не отмечено"}</b></div>`}).join("");
+ return `<div class="card" style="margin-bottom:12px"><h2>Результаты</h2>${res}</div><div class="card"><h2>Как всё прошло?</h2><div style="margin:12px 0 6px">${FEEL.map(f=>`<button class="chip${wz.feel===f?" on":""}" data-act="feel" data-f="${esc(f)}">${esc(f)}</button>`).join("")}</div>
+ <div class="row"><div style="width:160px"><label class="f">Вес, кг (необязательно)</label><input class="inp" data-fld="weight" value="${esc(wz.weight)}" inputmode="decimal"></div><div style="width:160px"><label class="f">Талия, см (необязательно)</label><input class="inp" data-fld="waist" value="${esc(wz.waist)}" inputmode="decimal"></div></div>
+ <label class="f" style="margin-top:14px">Заметки</label><textarea class="inp" rows="3" data-fld="notes">${esc(wz.notes)}</textarea><div class="err" id="sumErr"></div></div>`}
+
+function finish(){
+ let w,t;try{w=pn(wz.weight,"Вес");t=pn(wz.waist,"Талия")}catch(e){$("#sumErr").textContent=e.message;return}
+ D.sessions.push({date:wz.date,type:wz.plan,exercises:wz.ex.map((e,i)=>{const f=wz.sets[i].filter(Boolean);return{name:e.name,plan:e.plan,actual:f.length?f.join(" / "):"—",sets:f}}),
+  warmup:wz.warm.some(Boolean),weight:w,waist:t,feeling:wz.feel,notes:wz.notes.trim()});
+ if(!save()){D.sessions.pop();return}
+ wz=null;stopRest();setup={plan:nextPlan(),date:iso(new Date())};selS=null;view="history";render();toast("Тренировка сохранена ✓")}
+
+/* ===================== Таймер отдыха ===================== */
+function beep(){try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.value=.15;o.start();o.stop(a.currentTime+.4)}catch(e){}}
+function startRest(s){clearInterval(rest.t);rest.total=rest.left=s;rest.state=1;paintRest();
+ rest.t=setInterval(()=>{rest.left--;if(rest.left<=0){clearInterval(rest.t);rest.state=2;beep()}paintRest()},1000)}
+function stopRest(){clearInterval(rest.t);rest.state=0;paintRest()}
+function paintRest(){const t=$("#restText"),b=$("#restBar");if(!t||!b)return;
+ if(rest.state===1){t.textContent=`${Math.floor(rest.left/60)}:${pad(rest.left%60)}`;t.style.color="var(--or)";b.style.width=(100*(1-rest.left/rest.total))+"%"}
+ else if(rest.state===2){t.textContent="Готово — поехали!";t.style.color="var(--acd)";b.style.width="100%"}
+ else{t.textContent="Готов к работе";t.style.color="var(--acd)";b.style.width="0"}}
+
+/* ===================== ИСТОРИЯ ===================== */
+function vHist(){
+ const list=sessDesc();if(!list.includes(selS))selS=list[0]||null;
+ const items=list.map((s,i)=>`<div class="item${s===selS?" sel":""}" data-act="sel" data-i="${i}"><div><b>${esc(cap(fd(s.date,{day:"numeric",month:"long",weekday:"short"})))}</b><div class="muted sm">${(s.exercises||[]).length} упр.${s.feeling?" · "+esc(s.feeling):""}</div></div><span class="ty">${esc(s.type)}</span></div>`).join("");
+ let det='<div class="muted">Выбери тренировку в списке слева.</div>';
+ if(selS && editS && editS._ref===selS){
+  const s=editS;
+  const exRows=(s.exercises||[]).map((e,i)=>`<div style="border-top:1px solid var(--line);padding:12px 0">
+   <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px"><b>${esc(e.name)}</b><span class="muted sm">план: ${esc(e.plan)}</span></div>
+   <label class="f">Факт (повторы через / )</label>
+   <input class="inp" data-edex="${i}" value="${esc(e.actual==="—"?"":e.actual)}" placeholder="напр. 12 / 12 / 10">
+  </div>`).join("");
+  det=`<h1 style="font-size:22px;margin-bottom:12px">Редактирование</h1>
+  <div class="row" style="margin-bottom:12px">
+   <div style="width:160px"><label class="f">Дата</label><input class="inp" type="date" data-ed="date" value="${esc(s.date)}"></div>
+   <div style="flex:1"><label class="f">Тип</label><select class="inp" data-ed="type">${Object.keys(PLANS).map(p=>`<option value="${esc(p)}" ${p===s.type?"selected":""}>${esc(p)}</option>`).join("")}</select></div>
+  </div>
+  <div class="row" style="margin-bottom:12px">
+   <div style="width:120px"><label class="f">Вес, кг</label><input class="inp" data-ed="weight" value="${s.weight>0?esc(num(s.weight)):""}" inputmode="decimal"></div>
+   <div style="width:120px"><label class="f">Талия, см</label><input class="inp" data-ed="waist" value="${s.waist>0?esc(num(s.waist)):""}" inputmode="decimal"></div>
+   <div style="flex:1"><label class="f">Самочувствие</label><select class="inp" data-ed="feeling">${FEEL.map(f=>`<option ${f===s.feeling?"selected":""}>${esc(f)}</option>`).join("")}</select></div>
+  </div>
+  <label class="cb" style="margin:8px 0 14px;font-size:14px"><input type="checkbox" data-ed="warmup" ${s.warmup?"checked":""}> Разминка выполнена</label>
+  <h2>Упражнения</h2>${exRows}
+  <label class="f" style="margin-top:12px">Заметки</label>
+  <textarea class="inp" rows="3" data-ed="notes">${esc(s.notes||"")}</textarea>
+  <div class="err" id="edErr"></div>
+  <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+   <button class="btn" data-act="saveed">💾 Сохранить изменения</button>
+   <button class="btn sub" data-act="canceled">Отмена</button>
+   <button class="btn dan" data-act="delsess">🗑 Удалить</button>
+  </div>`;
+ } else if(selS){const s=selS;det=`<h1 style="font-size:22px">${esc(cap(fd(s.date,{weekday:"long",day:"numeric",month:"long",year:"numeric"})))}</h1><div style="margin:10px 0"><span class="badge">${esc(s.type)}</span><span class="badge ${s.warmup?"":"g"}">${s.warmup?"✓ разминка":"без разминки"}</span>${s.feeling?`<span class="badge g">${esc(s.feeling)}</span>`:""}${s.weight>0?`<span class="badge g">${num(s.weight)} кг</span>`:""}${s.waist>0?`<span class="badge g">талия ${num(s.waist)} см</span>`:""}</div>
+  ${(s.exercises||[]).map(e=>`<div class="xr"><div><b>${esc(e.name)}</b><div class="muted sm">план: ${esc(e.plan)}</div></div><b class="a">${esc(e.actual)}</b></div>`).join("")}
+  ${s.notes?`<div class="muted sm" style="margin-top:12px">Заметки</div><div>${esc(s.notes)}</div>`:""}
+  <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+   <button class="btn" data-act="edited">✎ Редактировать</button>
+   <button class="btn dan" data-act="delsess">🗑 Удалить тренировку</button>
+  </div>`}
+ return `<div class="page"><div class="top" style="margin-bottom:16px"><h1>История занятий</h1><div><button class="btn sub" data-act="csv">⬇ Экспорт CSV</button> <button class="btn sub" data-act="bak">💾 Резервная копия</button> <button class="btn sub" data-act="imp">⬆ Загрузить копию</button></div></div>
+ <div class="hist"><div>${items||'<div class="empty">Пока нет тренировок.<br>Запиши первую на вкладке «Тренировка».<br><br>Есть файл workout_data.json из старой версии?<br>Нажми «Загрузить копию».</div>'}</div><div class="card">${det}</div></div></div>`}
+
+const csvq=s=>{s=String(s??"");return /[;"\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s};
+function download(name,text,type){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
+function exportCsv(){
+ if(!D.sessions.length)return toast("История пока пуста");
+ const r=[["Дата","Тип","Разминка","Упражнение","План","Факт","Вес","Талия","Самочувствие","Заметки"].join(";")];
+ [...sessDesc()].reverse().forEach(s=>{const ex=(s.exercises&&s.exercises.length)?s.exercises:[{}];
+  ex.forEach(e=>r.push([s.date,s.type,s.warmup?"да":"нет",e.name,e.plan,e.actual,s.weight>0?num(s.weight):"",s.waist>0?num(s.waist):"",s.feeling,s.notes].map(csvq).join(";")))});
+ download("forma_workouts.csv","\uFEFF"+r.join("\r\n"),"text/csv;charset=utf-8");toast("Файл сохранён ✓")}
+
+/* ===================== ЗАМЕРЫ ===================== */
+function chartSvg(){
+ const w=metric==="weight",u=w?"кг":"см",s=series(w);
+ if(!s.length)return '<div class="empty">Пока нет данных — добавь первый замер</div>';
+ const W=640,H=280,l=50,r=26,tp=16,b=34,pw=W-l-r,ph=H-tp-b;
+ let mn=Math.min(...s.map(x=>x.v)),mx=Math.max(...s.map(x=>x.v));
+ if(mx-mn<.5){mn-=1;mx+=1}else{const p=(mx-mn)*.15;mn-=p;mx+=p}
+ const d0=s[0].d,d1=s.at(-1).d,span=(d1-d0)/864e5,X=d=>span<=0?l+pw/2:l+((d-d0)/864e5)/span*pw,Y=v=>tp+(1-(v-mn)/(mx-mn))*ph;
+ let g="";for(let i=0;i<=3;i++){const v=mn+(mx-mn)*i/3,y=Y(v);g+=`<line x1="${l}" x2="${W-r}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${l-8}" y="${y+4}" text-anchor="end" fill="var(--muted)" font-size="11">${num(Math.round(v*10)/10)}</text>`}
+ const pts=s.map(p=>`${X(p.d).toFixed(1)},${Y(p.v).toFixed(1)}`).join(" "),f=d=>d.toLocaleDateString("ru-RU",{day:"numeric",month:"short"}),L=s.at(-1);
+ return `<svg class="ch" viewBox="0 0 ${W} ${H}">${g}${s.length>1?`<polyline points="${pts}" fill="none" stroke="var(--ac)" stroke-width="3" stroke-linejoin="round"/>`:""}
+ ${s.map(p=>`<circle cx="${X(p.d)}" cy="${Y(p.v)}" r="5.5" fill="var(--card)" stroke="var(--acd)" stroke-width="3"><title>${p.d.toLocaleDateString("ru-RU")}: ${num(p.v)} ${u}</title></circle>`).join("")}
+ <text x="${Math.min(X(L.d),W-r-30)}" y="${Math.max(12,Y(L.v)-12)}" text-anchor="middle" fill="var(--acd)" font-size="12" font-weight="700">${num(L.v)} ${u}</text>
+ <text x="${X(d0)}" y="${H-10}" text-anchor="middle" fill="var(--muted)" font-size="11">${f(d0)}</text>${span>0?`<text x="${X(d1)}" y="${H-10}" text-anchor="middle" fill="var(--muted)" font-size="11">${f(d1)}</text>`:""}</svg>`}
+function vBody(){
+ const rows=D.measurements.map((m,i)=>[m,i]).sort((a,b)=>String(b[0].date).localeCompare(String(a[0].date))||b[1]-a[1]).map(([m,i])=>
+  `<div class="item" style="cursor:default"><b style="flex:1">${esc(fd(m.date,{day:"numeric",month:"short",year:"numeric"}))}</b><span style="width:80px;color:var(--acd);font-weight:600">${m.weight>0?num(m.weight)+" кг":"—"}</span><span style="width:80px;color:var(--or);font-weight:600">${m.waist>0?num(m.waist)+" см":"—"}</span><button class="btn sub" style="padding:4px 10px" data-act="delm" data-i="${i}" title="Удалить">✕</button></div>`).join("");
+ return `<div class="page"><h1>Вес и талия</h1><div class="muted" style="margin-bottom:18px">Измеряйся утром в одинаковых условиях. Смотри на тенденцию за 2–4 недели, а не на отдельный день.</div>
+ <div class="hist" style="grid-template-columns:350px 1fr"><div><div class="card" style="margin-bottom:12px"><h2>Новый замер</h2><label class="f">Дата</label><input class="inp" type="date" id="mDate" value="${iso(new Date())}" style="margin-bottom:10px">
+ <div class="row"><div style="flex:1"><label class="f">Вес, кг</label><input class="inp" id="mW" inputmode="decimal"></div><div style="flex:1"><label class="f">Талия, см</label><input class="inp" id="mT" inputmode="decimal"></div></div>
+ <div class="err" id="mErr"></div><button class="btn" style="width:100%;margin-top:6px" data-act="addm">＋ Добавить замер</button></div>${rows}</div>
+ <div class="card"><div class="top"><h2>Динамика</h2><div><button class="chip${metric==="weight"?" on":""}" data-act="metric" data-m="weight">Вес</button><button class="chip${metric==="waist"?" on":""}" data-act="metric" data-m="waist">Талия</button></div></div>${chartSvg()}</div></div></div>`}
+
+
+/* ===================== ПИТАНИЕ ===================== */
+function foodDay(date){
+  let x=D.nutrition.find(n=>n.date===date);
+  if(!x){x={date,meals:MEALS.map(n=>({name:n,items:"",kcal:""})),water:"",notes:""};}
+  // ensure 4 meals
+  while(x.meals.length<MEALS.length) x.meals.push({name:MEALS[x.meals.length],items:"",kcal:""});
+  return x;
+}
+function foodTotal(day){
+  return (day.meals||[]).reduce((a,m)=>{const k=Number(String(m.kcal||"").replace(",","."));return a+(k>0?k:0)},0);
+}
+function vFood(){
+  const day=foodDay(foodDate);
+  const list=[...D.nutrition].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  const meals=day.meals.map((m,i)=>`<div class="card" style="margin-bottom:10px;padding:16px">
+   <div class="top"><h2 style="margin:0">${esc(m.name||MEALS[i])}</h2>
+    <div style="width:110px"><label class="f">Ккал</label><input class="inp" data-fkcal="${i}" value="${esc(m.kcal||"")}" inputmode="decimal" placeholder="—"></div>
+   </div>
+   <label class="f">Что съел</label>
+   <textarea class="inp" rows="2" data-fitems="${i}" placeholder="например: овсянка 60 г, яйца 2 шт, яблоко">${esc(m.items||"")}</textarea>
+  </div>`).join("");
+  const hist=list.slice(0,14).map(n=>{
+    const tot=foodTotal(n);
+    return `<div class="item${n.date===foodDate?" sel":""}" data-act="fday" data-d="${esc(n.date)}">
+      <div><b>${esc(cap(fd(n.date,{day:"numeric",month:"short",weekday:"short"})))}</b>
+      <div class="muted sm">${tot?tot+" ккал":"без калорий"}</div></div>
+      <span class="ty">${(n.meals||[]).filter(m=>m.items&&m.items.trim()).length} приёма</span>
+    </div>`;
+  }).join("");
+  return `<div class="page"><div class="top" style="margin-bottom:8px"><h1>Питание</h1>
+   <div class="row"><div><label class="f">Дата</label><input class="inp" type="date" id="foodDate" value="${foodDate}" style="width:170px"></div>
+   <button class="btn" data-act="fsave">💾 Сохранить день</button>
+   <button class="btn sub" data-act="ftoday">Сегодня</button>
+   ${D.nutrition.some(n=>n.date===foodDate)?'<button class="btn dan" data-act="fdel">Удалить день</button>':""}
+   </div></div>
+  <div class="muted" style="margin-bottom:14px">Записывай приёмы пищи. Калории — по желанию. Программа простая: контроль привычек, без сложных расчётов.</div>
+  <div class="hist" style="grid-template-columns:320px 1fr">
+   <div><h2 style="margin-bottom:10px">Последние дни</h2>${hist||'<div class="empty">Пока пусто</div>'}</div>
+   <div>
+    <div class="card" style="margin-bottom:12px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center">
+     <div><div class="sm muted">Итого за день</div><div style="font-size:28px;font-weight:700;color:var(--acd)">${foodTotal(day)||"—"} <span style="font-size:14px;font-weight:600">ккал</span></div></div>
+     <div style="width:120px"><label class="f">Вода, мл</label><input class="inp" data-fwater value="${esc(day.water||"")}" inputmode="numeric" placeholder="2000"></div>
+    </div>
+    ${meals}
+    <div class="card"><label class="f">Заметки о дне</label><textarea class="inp" rows="2" data-fnotes placeholder="сон, аппетит, срывы…">${esc(day.notes||"")}</textarea>
+    <div class="err" id="fErr"></div></div>
+   </div>
+  </div></div>`;
+}
+function collectFoodFromDom(){
+  const day=foodDay(foodDate);
+  day.meals=MEALS.map((name,i)=>({
+    name,
+    items: (document.querySelector(`[data-fitems="${i}"]`)||{}).value||"",
+    kcal: (document.querySelector(`[data-fkcal="${i}"]`)||{}).value||""
+  }));
+  day.water=(document.querySelector("[data-fwater]")||{}).value||"";
+  day.notes=(document.querySelector("[data-fnotes]")||{}).value||"";
+  return day;
+}
+function saveFoodDay(){
+  const day=collectFoodFromDom();
+  // validate optional kcal
+  for(const m of day.meals){
+    if(m.kcal && m.kcal.trim()){
+      try{pn(m.kcal,"Ккал")}catch(e){$("#fErr").textContent=e.message;return}
+    }
+  }
+  if(day.water && day.water.trim()){
+    try{pn(day.water,"Вода")}catch(e){$("#fErr").textContent=e.message;return}
+  }
+  const i=D.nutrition.findIndex(n=>n.date===foodDate);
+  if(i>=0) D.nutrition[i]=day; else D.nutrition.push(day);
+  if(save()){render();toast("День питания сохранён ✓")}
+}
+
+/* ===================== События ===================== */
+document.addEventListener("click",e=>{
+ const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,ex=wz?wz.stage-1:0;
+ switch(a){
+ case"nav":view=b.dataset.v;render();break;
+ case"hero":if(!wz)setup.plan=nextPlan();view="train";render();break;
+ case"plan":setup.plan=b.dataset.p;render();break;
+ case"start":startWz(true);break;
+ case"startnw":startWz(false);break;
+ case"abort":if(confirm("Прервать тренировку? Введённые данные не сохранятся.")){wz=null;stopRest();render()}break;
+ case"stage":wz.stage=+b.dataset.s;render();break;
+ case"next":wz.stage++;render();break;
+ case"prev":wz.stage--;render();break;
+ case"finish":finish();break;
+ case"minus":case"plus":{const k=+b.dataset.k,i=$(`[data-set="${k}"]`),cur=parseInt(i.value)||parseInt(i.placeholder)||0;i.value=Math.max(0,cur+(a==="plus"?1:-1));wz.sets[ex][k]=i.value;break}
+ case"ok":{const k=+b.dataset.k,i=$(`[data-set="${k}"]`),on=!wz.done[ex][k];wz.done[ex][k]=on;b.classList.toggle("on",on);
+  if(on){if(!i.value.trim()){i.value=i.placeholder;wz.sets[ex][k]=i.value}if(k<wz.sets[ex].length-1)startRest(wz.rest)}break}
+ case"rest":wz.rest=+b.dataset.sec;$$('[data-act="rest"]').forEach(c=>c.classList.toggle("on",c===b));break;
+ case"restgo":startRest(wz.rest);break;
+ case"restreset":stopRest();break;
+ case"feel":wz.feel=b.dataset.f;$$('[data-act="feel"]').forEach(c=>c.classList.toggle("on",c===b));break;
+ case"sel":selS=sessDesc()[+b.dataset.i];editS=null;render();break;
+ case"delsess":if(selS&&confirm("Удалить выбранную тренировку?")){D.sessions.splice(D.sessions.indexOf(selS),1);save();selS=null;render();toast("Тренировка удалена")}break;
+ case"csv":exportCsv();break;
+ case"bak":download("workout_data.json",JSON.stringify(D,null,2),"application/json");toast("Резервная копия скачана ✓");break;
+ case"imp":$("#importFile").click();break;
+ case"edited":if(selS){editS=JSON.parse(JSON.stringify(selS));editS._ref=selS;render()}break;
+ case"canceled":editS=null;render();break;
+ case"saveed":{
+  if(!editS||!selS)break;
+  try{
+   const dateEl=document.querySelector('[data-ed="date"]');
+   const typeEl=document.querySelector('[data-ed="type"]');
+   const feelEl=document.querySelector('[data-ed="feeling"]');
+   const wEl=document.querySelector('[data-ed="weight"]');
+   const tEl=document.querySelector('[data-ed="waist"]');
+   const nEl=document.querySelector('[data-ed="notes"]');
+   const warmEl=document.querySelector('[data-ed="warmup"]');
+   const date=dateEl?dateEl.value:editS.date;
+   if(!okD(date))throw new Error("Дата должна быть ГГГГ-ММ-ДД");
+   const w=pn(wEl?wEl.value:"","Вес");
+   const t=pn(tEl?tEl.value:"","Талия");
+   selS.date=date;
+   selS.type=typeEl?typeEl.value:selS.type;
+   selS.feeling=feelEl?feelEl.value:selS.feeling;
+   selS.weight=w; selS.waist=t;
+   selS.notes=nEl?nEl.value.trim():"";
+   selS.warmup=!!(warmEl&&warmEl.checked);
+   (selS.exercises||[]).forEach((e,i)=>{
+     const inp=document.querySelector(`[data-edex="${i}"]`);
+     if(!inp)return;
+     const val=inp.value.trim();
+     e.actual=val||"—";
+     e.sets=val?val.split("/").map(x=>x.trim()).filter(Boolean):[];
+   });
+   if(!save())throw new Error("Не удалось сохранить");
+   editS=null; render(); toast("Тренировка обновлена ✓");
+  }catch(err){const el=$("#edErr"); if(el) el.textContent=err.message; else toast(err.message)}
+  break}
+ case"fday":foodDate=b.dataset.d;render();break;
+ case"ftoday":foodDate=iso(new Date());render();break;
+ case"fsave":saveFoodDay();break;
+ case"fdel":if(confirm("Удалить запись питания за этот день?")){D.nutrition=D.nutrition.filter(n=>n.date!==foodDate);save();render();toast("Удалено")}break;
+ case"metric":metric=b.dataset.m;render();break;
+ case"addm":{let w,t;try{w=pn($("#mW").value,"Вес");t=pn($("#mT").value,"Талия");if(w==null&&t==null)throw new Error("Укажи вес или талию.")}catch(x){$("#mErr").textContent=x.message;return}
+  D.measurements.push({date:okD($("#mDate").value)?$("#mDate").value:iso(new Date()),weight:w,waist:t});if(save()){render();toast("Замер добавлен ✓")}else D.measurements.pop();break}
+ case"delm":if(confirm("Удалить этот замер?")){D.measurements.splice(+b.dataset.i,1);save();render()}break;
+ }});
+document.addEventListener("input",e=>{const t=e.target;
+ if(t.dataset.set!==undefined)wz.sets[wz.stage-1][+t.dataset.set]=t.value.trim();
+ else if(t.dataset.fld)wz[t.dataset.fld]=t.value;
+ else if(t.dataset.warm!==undefined)wz.warm[+t.dataset.warm]=t.checked;
+ else if(t.id==="setupDate")setup.date=t.value;
+ else if(t.id==="foodDate"){foodDate=t.value||iso(new Date());render()}});
+$("#importFile").addEventListener("change",async e=>{
+ const f=e.target.files[0];e.target.value="";if(!f)return;
+ try{const d=JSON.parse(await f.text());if(!d||!Array.isArray(d.sessions))throw new Error("В файле нет списка тренировок.");
+  if(!confirm(`Загрузить ${d.sessions.length} тренировок, ${(d.measurements||[]).length} замеров и ${(d.nutrition||[]).length} дней питания? Текущие данные будут заменены.`))return;
+  D={sessions:d.sessions,measurements:Array.isArray(d.measurements)?d.measurements:[],nutrition:Array.isArray(d.nutrition)?d.nutrition:[]};save();selS=null;editS=null;render();toast("Данные загружены ✓")}
+ catch(x){alert("Не удалось прочитать файл: "+x.message)}});
+window.addEventListener("beforeunload",e=>{if(wz){e.preventDefault();e.returnValue=""}});
+render();
+</script>
+</body>
+</html>
